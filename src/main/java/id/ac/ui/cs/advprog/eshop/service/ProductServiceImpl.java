@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+
 @Service
 public class ProductServiceImpl implements ProductService{
     @Autowired
@@ -18,6 +19,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Product create(Product product){
+        if(product.getProductId()== null){
+            product.setProductId(UUID.randomUUID());
+        }
         productRepository.create(product);
         return product;
     }
@@ -29,5 +33,25 @@ public class ProductServiceImpl implements ProductService{
         productIterator.forEachRemaining(allProduct::add);
         return allProduct;
     }
+
+    @Override
+    public Product findProductById(UUID id){
+        return productRepository.findProductById(id);
+    }
+
+    @Override
+    public Product update(Product editedProduct){
+        return productRepository.update(editedProduct);
+
+    }
+
+        @Override
+    public void delete(UUID id){
+        productRepository.delete(id);
+    }
+
+
+
     
+
 }
