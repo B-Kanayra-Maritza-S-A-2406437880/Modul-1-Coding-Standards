@@ -7,6 +7,8 @@ import java.util.UUID;
 public interface ProductService {
     public Product create(Product product);
     public List<Product> findAll();
+    public Product findProductById(UUID id);
+    public Product update(Product editerProduct);
     public void delete(UUID id);
     
 }

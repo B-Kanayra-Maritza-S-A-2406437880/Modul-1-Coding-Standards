@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-
 @Controller
 @RequestMapping("/product")
 public class ProductController {
@@ -36,9 +35,26 @@ public class ProductController {
         List<Product> allProducts = service.findAll();
         model.addAttribute("products", allProducts);
         return "productList";
+    } 
+
+
+    @GetMapping("/edit/{id}")
+    public String editProductPage(@PathVariable UUID id, Model model){
+        Product product = service.findProductById(id);
+        if (product == null) {
+            return "redirect:/product/list";
+        }
+        model.addAttribute("product", product);
+        return "editProduct";
     }
 
+    @PostMapping("/edit")
+    public String editProductPost(@ModelAttribute Product product){
+        service.update(product);
+        return "redirect:/product/list";
+    }
 
+    
     @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable UUID id){
         service.delete(id);

@@ -15,13 +15,24 @@
         <thead>
         <tr>
             <th scope="col">Product Name</th>
+            <th scope="col">Product ID</th>
             <th scope="col">Quantity</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="product: ${products}">
             <td th:text="${product.productName}"></td>
+            <td th:text="${product.productId}"></td>
             <td th:text="${product.productQuantity}"></td>
+            <td>
+            <a th:if="${product.productId != null}"
+                th:href="@{/product/edit/{id}(id=${product.productId})}"
+                class="btn btn-sm btn-warning">
+                Edit
+            </a>
+
+            </td>
+
             <td>
                 <form th:action="@{/product/delete/{id}(id=${product.productId})}"
                 method="post"
@@ -32,6 +43,7 @@
                 </button>
             </form>
             </td>
+
         </tr>
         </tbody>
     </table>
