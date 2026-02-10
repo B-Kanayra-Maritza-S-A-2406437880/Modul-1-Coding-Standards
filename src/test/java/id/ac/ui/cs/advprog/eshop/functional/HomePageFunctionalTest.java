@@ -17,16 +17,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith(SeleniumJupiter.class)
 class HomePageFunctionalTest {
 
-    /**
-     * The port number assigned to the running application during test execution.
-     * Set automatically during each test run by Spring Framework's test context.
-     */
     @LocalServerPort
     private int serverPort;
 
-    /**
-     * The base URL for testing. Default to http://localhost.
-     */
+
     @Value("${app.baseUrl:http://localhost}")
     private String testBaseUrl;
 
