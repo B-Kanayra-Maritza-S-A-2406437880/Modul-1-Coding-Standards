@@ -1,1 +1,15 @@
-# Modul-1-Coding-Standards
+Modul 1- Adpro- Reflection
+Name : Kanayra Maritza Sanika Adeeva
+NPM : 2406437880
+Class : Adpro B
+
+Reflection 1
+Di Latihan ini, saya mengimplementasi 2 fitur baru yaitu edit product dan delete product dengan memisahkan tanggung awab ke layer repository, service, dan controller sesuai dengan prinsip separation of concerns yang sudah dipelajari diman tiap layer punya peran yang jelas.
+Setiap method di Controller dan Service fokus melakukan satu hal saja (Single Responsibility). Misalnya, ProductController hanya bertugas mengatur navigasi dan memparsing data, sementara logika penyimpanan ada di Repository. Selanjutnya, alih-alih menggunakan ID numerik atau string, saya menggunakan UUID.randomUUID() di ProductRepository untuk mencegah serangan ID Enumeration di mana user mencoba menebak-nebak URL produk orang lain. Terakhir, semua manipulasi data produk dilakukan melalui lapisan Service, sehingga Controller tidak punya akses langsung untuk mengacak-acak ArrayList di repositori. Namun, setelah saya telusuri masih ada beberapa hal yang harus diimprove antara lain adalah: 
+Saat ini, method update mengembalikan null jika produk dengan ID tertentu tidak ditemukan. Ke depannya mekanisme ini dapat diperbaiki dengan penggunaan exception handling yang lebih eksplisit agar alur error lebih jelas dan aman. Selain itu, perlu konsistensi dalam validasi input agar tidak terjadi potensi kesalahan ketika ID yang diberikan tidak valid atau tidak tersedia di repository.
+
+Reflection 2
+Setelah menulis unit test, saya merasa lebih percaya diri terhadap perilaku setiap komponen dalam aplikasi. Hal itu membantu saya memastikan bahwa setiap fitur fitur yang dibuat bekerja sesuai dengan spesifikasinya, dan kalua ada kesalahan logika dapat terdeteksi lebih awal sebelum aplikasi dijalankan secara keseluruhan. Terkait jumlah unit test dalam satu class menurut saya sebaiknya tidak ditentukan secara pasti, melainkan disesuaikan dengan jumlah perilaku yang ingin diuji. Setiap method idealnya memiliki beberapa test case yang mencakup skenario positif, skenario negatif, edge cases.Memiliki 100% code coverage tidak berarti kode tersebut bebas dari bug atau error melainkan coverage hanya mengukur bagian kode yang dijalankan oleh test, bukan benar benar menjamin bahwa seluruh logika sudah benar atau semua kemungkinan kesalahan telah diuji.
+
+Jika setelah menulis CreateProductFunctionalTest.java saya diminta untuk membuat functional test baru yang memverifikasi jumlah item di product list dibuat dalam class baru dengan setup dan instance variable yang sama, hal ini berpotensi mengurangi kebersihan kode yaitu karena adanya duplikasi kode . Duplikasi kode ini khususnya terjadi pada bagian setup seperti inisialisasi baseUrl, @LocalServerPort, serta konfigurasi @SpringBootTest dmana duplikasi ini dapat menurunkan maintainability karena perubahan kecil pada setup harus dilakukan di banyak tempat. Sarann improvementt sya untuk meningkatkan kualitas kode ke depanny adalah dengan membuat base functional test class yang berisi setup umum, kemudian functional test lain dapat meng-inherit class tersebut. Dengan cara ini, kode menjadi lebih bersih, konsisten, dan mudah dikembangkan tanpa mengubah perilaku test yang ada.
+
