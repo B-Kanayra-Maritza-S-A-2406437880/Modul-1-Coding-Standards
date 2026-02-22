@@ -43,6 +43,18 @@ class ProductRepositoryTest {
     }
 
     @Test
+    void testCreateProductWithNullId() {
+        Product product = new Product();
+        product.setProductName("Produk Without ID");
+        product.setProductQuantity(10);
+
+        Product savedProduct = productRepository.create(product);
+
+        // Automatically make the ID (product tidak null lagi)
+        assertNotNull(savedProduct.getProductId());
+    }
+
+    @Test
     void testFindAllIfEmpty() {
         Iterator<Product> productIterator = productRepository.findAll();
         assertFalse(productIterator.hasNext());
@@ -69,6 +81,27 @@ class ProductRepositoryTest {
         savedProduct = productIterator.next();
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
+    }
+
+
+    @Test
+    void testFindProductByIdNotFound() {
+        // Assumption : Empty repository (no product)
+        UUID randomId = UUID.randomUUID();
+        Product foundProduct = productRepository.findProductById(randomId);
+
+        assertNull(foundProduct);
+    }
+
+    @Test
+    void testFindProductByIdNotFoundInPopulatedList() {
+        // Assumption: 1 product added to repository before
+        Product product = new Product();
+        product.setProductId(UUID.randomUUID());
+        productRepository.create(product);
+
+        Product foundProduct = productRepository.findProductById(UUID.randomUUID());
+        assertNull(foundProduct);
     }
 
     // Update feature tests
@@ -125,6 +158,7 @@ class ProductRepositoryTest {
 
     }
 
+
     @Test
     void testDeleteExistingProductSuccess(){
         UUID idTest3 = UUID.fromString("123e4567-e89b-12d3-a456-556642440003");
@@ -170,4 +204,8 @@ class ProductRepositoryTest {
 
     }
 
+
 }
+
+
+
