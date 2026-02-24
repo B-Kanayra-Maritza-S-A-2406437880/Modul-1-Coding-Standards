@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -19,7 +20,6 @@ class HomePageFunctionalTest {
 
     @LocalServerPort
     private int serverPort;
-
 
     @Value("${app.baseUrl:http://localhost}")
     private String testBaseUrl;
@@ -33,22 +33,31 @@ class HomePageFunctionalTest {
 
     @Test
     void pageTitle_isCorrect(ChromeDriver driver) throws Exception {
-        // Exercise
         driver.get(baseUrl);
         String pageTitle = driver.getTitle();
-
-        // Verify
         assertEquals("ADV Shop", pageTitle);
     }
 
     @Test
     void welcomeMessage_homePage_isCorrect(ChromeDriver driver) throws Exception {
-        // Exercise
         driver.get(baseUrl);
         String welcomeMessage = driver.findElement(By.tagName("h3"))
                 .getText();
 
-        // Verify
-        assertEquals("Welcome", welcomeMessage);
+        assertEquals("Welcome to ADV Shop", welcomeMessage);
+    }
+
+    @Test
+    void productListButton_isDisplayed(ChromeDriver driver) throws Exception {
+        driver.get(baseUrl);
+        String buttonText = driver.findElement(By.linkText("Go to Product List")).getText();
+        assertEquals("Go to Product List", buttonText);
+    }
+
+    @Test
+    void createProductButton_isDisplayed(ChromeDriver driver) throws Exception {
+        driver.get(baseUrl);
+        String buttonText = driver.findElement(By.linkText("Create New Product")).getText();
+        assertEquals("Create New Product", buttonText);
     }
 }
