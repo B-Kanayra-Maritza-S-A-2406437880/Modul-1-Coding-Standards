@@ -6,6 +6,7 @@ plugins {
 	id("org.sonarqube") version "4.4.1.3373"
 }
 
+
 group = "id.ac.ui.cs.advprog"
 version = "0.0.1-SNAPSHOT"
 description = "eshop"
@@ -54,6 +55,10 @@ tasks.test {
 
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
+	reports{
+		xml.required.set(true)
+		html.required.set(true)
+	}
 }
 
 tasks.register<Test>("unitTest") {
@@ -76,5 +81,13 @@ tasks.register<Test>("functionalTest") {
 
 tasks.withType<Test>().configureEach {
 	useJUnitPlatform()
+}
+
+sonar {
+	properties {
+		property("sonar.projectKey", "B-Kanayra-Maritza-S-A-2406437880_Modul-1-Coding-Standards")
+		property("sonar.organization", "b-kanayra-maritza-s-a-2406437880")
+		property("sonar.host.url", "https://sonarcloud.io")
+	}
 }
 
