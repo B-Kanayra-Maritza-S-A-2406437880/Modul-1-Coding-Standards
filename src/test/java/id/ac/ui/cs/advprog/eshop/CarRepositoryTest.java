@@ -22,6 +22,7 @@ class CarRepositoryTest {
     @Test
     void testCreateAndFindAll() {
         Car car = new Car();
+        car.setCarId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         car.setCarName("Toyota Supra");
         car.setCarColor("Red");
         car.setCarQuantity(1);
@@ -60,12 +61,13 @@ class CarRepositoryTest {
     @Test
     void testFindByIdSuccess() {
         Car car = new Car();
+        car.setCarId("123");
         car.setCarName("Nissan GTR");
         carRepository.create(car);
 
-        Car foundCar = carRepository.findById(car.getCarId());
+        Car foundCar = carRepository.findById("123");
         assertNotNull(foundCar);
-        assertEquals(car.getCarId(), foundCar.getCarId());
+        assertEquals("123", foundCar.getCarId());
     }
 
     @Test
@@ -77,6 +79,7 @@ class CarRepositoryTest {
     @Test
     void testUpdateSuccess() {
         Car car = new Car();
+        car.setCarId("123");
         car.setCarName("Old Name");
         carRepository.create(car);
 
@@ -85,7 +88,7 @@ class CarRepositoryTest {
         updatedCarData.setCarColor("Blue");
         updatedCarData.setCarQuantity(5);
 
-        Car result = carRepository.update(car.getCarId(), updatedCarData);
+        Car result = carRepository.update("123", updatedCarData);
 
         assertNotNull(result);
         assertEquals("New Name", car.getCarName());
@@ -103,12 +106,11 @@ class CarRepositoryTest {
     @Test
     void testDelete() {
         Car car = new Car();
+        car.setCarId("123");
         carRepository.create(car);
-        String id = car.getCarId();
+        carRepository.delete("123");
 
-        carRepository.delete(id);
-
-        Car foundCar = carRepository.findById(id);
+        Car foundCar = carRepository.findById("123");
         assertNull(foundCar);
     }
 }
