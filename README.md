@@ -40,3 +40,44 @@ Hal ini untuk mempercepat proses kompilasi dengan membuang library yang tidak te
 
 # Question 2:
 Implementasi saat ini sudah memenuhi syarat Continuous Integration dan Continuous Deployment karena setiap kali saya melakukan push kode ke branch module-2-exercise atau melakukan merge ke branch main, GitHub Actions secara otomatis menjalankan rangkaian pengetesan. Hasil tes kemudian dilaporkan ke SonarCloud untuk dianalisis apakah terdapat _code smells_ atau kerentanan keamanan. Selain itu, saya memastikan bahwa setiap perubahan harus lulus verifikasi JaCoCo dengan _code coverage_ 100%, yang menjamin bahwa setiap baris kode yang baru dibuat telah diuji secara menyeluruh sebelum dianggap stabil. Munculnya centang hijau pada log GitHub menjadi indikator kuat bahwa kode sudah terverifikasi aman untuk digabungkan ke branch main. Melalui integrasi langsung antara repositori GitHub dengan platform Koyeb, setiap kode yang masuk ke branch main dan lolos tahap build akan langsung dideploy ke server produksi. Status "Koyeb Deployment is healthy" menjadi bukti bahwa versi terbaru aplikasi sudah live dan dapat diakses oleh pengguna. Hal ini sudah menerapkan konsep Continuous Deployment. Jika terdapat kegagalan pada tahap pengetesan atau syarat coverage tidak terpenuhi, sistem akan memberikan tanda silang merah dan menghentikan proses deployment untuk memastikan aplikasi yang rusak tidak sampai ke client serta menjaga kualitas aplikasi dari awal hingga akhir.
+
+#  Modul 3 - Adpro- Reflection
+# Question 1 (Principles applied to this project):
+1. Single Responsibility Principle (SRP):
+I decoupled CarController from ProductController by removing the inheritance ("extends") and moving them into separate files. Previously, ProductController was responsible for both handling Product-related HTTP requests and acting as a base class for CarController. This meant the class had multiple reasons to change. By refactoring, I moved the Car-related logic into its own independent CarController, ensuring ProductController only focuses on one domain.
+
+2. Open-Closed Principle (OCP):
+I implemented an abstract BaseModel class that handles UUID generation. This makes the system open for extension (we can add new models simply by extending BaseModel) but closed for modification (we don't need to change the ID generation logic in the existing classes). Standardizing the ID generation in a base class prevents code duplication. The abstract model is extended by the Product and Car model.
+
+3. Liskov Substitution Principle (LSP):
+I applied LSP by removing the extends ProductController from CarController. In the initial code, CarController was forced to inherit a ProductService via super(service) that it did not use. Since CarController cannot meaningfully substitute ProductController, I separated them to ensure the subclass doesn't carry irrelevant dependencies. Additionally, by using BaseModel, both Car and Product can now be treated as consistent entities that share a common ID property.
+
+4. Dependency Inversion Principle (DIP):
+I refactored the project so that Controllers and Services depend on Interfaces rather than concrete classes. I created CarRepositoryInterface and ProductRepositoryInterface, and ensured that the Services are injected as interfaces. This ensures that high-level modules are not tightly coupled to low-level modules, making the code more flexible and easier to test.
+
+5. Interface Segregation Principle (ISP)
+By maintaining separate interfaces for CarService and ProductService, I ensured that each controller only interacts with the methods it actually requires, preventing "fat interfaces".
+
+# Question 2 (Advantages after applying SOLID principles)
+- Maintainability through Abstraction
+By creating BaseModel class, we standardized the ID system. After I applied the SOLID principles I designed a scenario that Product and Car can simply inherit BaseModel. If we want to add another model, we don't need to write manual ID generation logic. We just extend BaseModel and it's ready.
+In contrast to the before solid code where Car used String and Product used UUID separately.
+
+= Flexibility and Swappable Logic
+After applying the SOLID principle, in CarServiceImpl, the code now depends on the interface. If we want to move from an ArrayList storage to a real database, we only need to create a new implementation of CarRepositoryInterface. We won't have to change a single line of code in the CarServiceImpl or CarController.
+
+- Safety from Side Effects (SRP & LSP):
+Now that CarController is independent, we can change the logic in ProductController (like example adding new validation) without any risk of breaking the Car functionality. They are no longer "physically" tied by inheritance.
+
+# Question 3 (Disadvantages of not applying SOLID principles)
+- Fragility due to Improper Inheritance
+In the Before code, CarController extends ProductController. The CarController constructor was forced to call super(productSservice). If someone modified the ProductService or the ProductController constructor, the CarController would be fail to compile even though it doesn't actually use the ProductService.
+
+- Code Duplication & Inconsistency
+Without BaseModel, the logic was scattered. Before applying the SOLID principles, CarRepository had a static int id and used UUID.randomUUID().toString(), while ProductRepository handled UUID directly. This inconsistency makes the code "Rigid" if we wanted to change the ID format to something else. We would have to find and manually change every single repository one by one.
+
+- Tight Coupling
+Before SOLID, CarServiceImpl was directly dependent on the concrete CarRepository. If we wanted to run a unit test for the service layer, we couldn't easily "mock" the repository because it was dependent to the concrete class. This makes the code hard to test and hard to maintain as the project grows.
+
+- God Class Complexity
+The old ProductController was doing too much. It was managing Product routes and serving as the base for Car routes. This "Double Responsibility" makes the file grow twice as fast, making it much harder for a us to navigate the code and increasing the chance of accidental bugs when editing the file.
