@@ -23,7 +23,7 @@
         <div class="card-body">
           <form th:action="@{/product/edit}" th:object="${product}" method="post">
 
-            <input type="hidden" th:field="*{productId}"/>
+            <input type="hidden" th:field="*{id}"/>
 
             <div class="form-group">
               <label for="productName">Product Name</label>

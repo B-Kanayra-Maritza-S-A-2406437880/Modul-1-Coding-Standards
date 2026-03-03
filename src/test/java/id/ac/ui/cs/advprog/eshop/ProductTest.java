@@ -15,14 +15,13 @@ class ProductTest {
     @BeforeEach
     void setUp() {
         this.product = new Product();
-        this.product.setProductId(UUID.fromString("eb558e9f-1c39-460e-8860-71af6af63bd6"));
         this.product.setProductName("Sampo Cap Bambang");
         this.product.setProductQuantity(100);
     }
 
     @Test
     void testGetProductId() {
-        assertEquals(UUID.fromString("eb558e9f-1c39-460e-8860-71af6af63bd6"), this.product.getProductId());
+        assertNotNull(this.product.getId());
     }
 
     @Test

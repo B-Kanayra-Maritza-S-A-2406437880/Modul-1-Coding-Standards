@@ -3,8 +3,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Car {
-    private String carId;
+public class Car extends BaseModel{
     private String carName;
     private String carColor;
     private int carQuantity;

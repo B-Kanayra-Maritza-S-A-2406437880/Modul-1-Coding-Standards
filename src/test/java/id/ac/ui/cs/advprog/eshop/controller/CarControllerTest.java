@@ -1,6 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Car;
+import id.ac.ui.cs.advprog.eshop.service.CarService;
 import id.ac.ui.cs.advprog.eshop.service.CarServiceImpl;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -27,17 +29,14 @@ class CarControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CarServiceImpl carService;
+    private CarService carService;
 
     @MockBean
-    private ProductService productService;
-
     private Car car;
 
     @BeforeEach
     void setUp() {
         car = new Car();
-        car.setCarId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         car.setCarName("Toyota Supra");
         car.setCarColor("Red");
         car.setCarQuantity(1);
@@ -75,9 +74,9 @@ class CarControllerTest {
 
     @Test
     void testEditCarPage() throws Exception {
-        when(carService.findById(car.getCarId())).thenReturn(car);
+        when(carService.findById(car.getId())).thenReturn(car);
 
-        mockMvc.perform(get("/car/editCar/" + car.getCarId()))
+        mockMvc.perform(get("/car/editCar/" + car.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("EditCar"))
                 .andExpect(model().attribute("car", car));
@@ -90,16 +89,16 @@ class CarControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("listCar"));
 
-        verify(carService, times(1)).update(eq(car.getCarId()), any(Car.class));
+        verify(carService, times(1)).update(eq(car.getId()), any(Car.class));
     }
 
     @Test
     void testDeleteCar() throws Exception {
         mockMvc.perform(post("/car/deleteCar")
-                        .param("carId", car.getCarId()))
+                        .param("carId", car.getId().toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("listCar"));
 
-        verify(carService, times(1)).deleteCarById(car.getCarId());
+        verify(carService, times(1)).deleteCarById(car.getId());
     }
 }

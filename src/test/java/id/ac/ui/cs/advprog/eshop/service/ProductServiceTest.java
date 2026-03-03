@@ -30,7 +30,6 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         product = new Product();
-        product.setProductId(UUID.randomUUID());
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
     }
@@ -57,7 +56,7 @@ class ProductServiceTest {
 
     @Test
     void testFindProductById() {
-        UUID id = product.getProductId();
+        UUID id = product.getId();
         when(productRepository.findProductById(id)).thenReturn(product);
 
         Product result = productService.findProductById(id);
@@ -69,16 +68,14 @@ class ProductServiceTest {
     @Test
     void testUpdate() {
         when(productRepository.update(product)).thenReturn(product);
-
         Product result = productService.update(product);
-
         assertNotNull(result);
         verify(productRepository, times(1)).update(product);
     }
 
     @Test
     void testDelete() {
-        UUID id = product.getProductId();
+        UUID id = product.getId();
         productService.delete(id);
         verify(productRepository, times(1)).delete(id);
     }

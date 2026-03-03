@@ -26,17 +26,11 @@ class ProductControllerTest {
 
     @MockBean
     private ProductService service;
-
-    @MockBean
-    private CarServiceImpl carService;
-
     private Product product;
 
     @BeforeEach
     void setUp() {
-
         product = new Product();
-        product.setProductId(UUID.randomUUID());
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
     }
@@ -74,7 +68,7 @@ class ProductControllerTest {
 
     @Test
     void testEditProductPageSuccess() throws Exception {
-        UUID id = product.getProductId();
+        UUID id = product.getId();
         when(service.findProductById(id)).thenReturn(product);
 
         mockMvc.perform(get("/product/edit/" + id))
@@ -105,7 +99,7 @@ class ProductControllerTest {
 
     @Test
     void testDeleteProduct() throws Exception {
-        UUID id = product.getProductId();
+        UUID id = product.getId();
         mockMvc.perform(post("/product/delete/" + id))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/product/list"));

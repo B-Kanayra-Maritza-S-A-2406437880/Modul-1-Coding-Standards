@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,7 +31,6 @@ class CarServiceTest {
     @BeforeEach
     void setUp() {
         car = new Car();
-        car.setCarId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         car.setCarName("Toyota Supra");
         car.setCarColor("Red");
         car.setCarQuantity(1);
@@ -43,7 +43,7 @@ class CarServiceTest {
         Car result = carService.create(car);
 
         assertNotNull(result);
-        assertEquals(car.getCarId(), result.getCarId());
+        assertEquals(car.getId(), result.getId());
         verify(carRepository, times(1)).create(car);
     }
 
@@ -59,32 +59,31 @@ class CarServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(car.getCarId(), result.getFirst().getCarId());
+        assertEquals(car.getId(), result.getFirst().getId());
         verify(carRepository, times(1)).findAll();
     }
 
     @Test
     void testFindById() {
-        when(carRepository.findById("eb558e9f-1c39-460e-8860-71af6af63bd6")).thenReturn(car);
+        when(carRepository.findById(car.getId())).thenReturn(car);
 
-        Car result = carService.findById("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        Car result = carService.findById(car.getId());
 
         assertNotNull(result);
-        assertEquals(car.getCarId(), result.getCarId());
-        verify(carRepository, times(1)).findById("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        assertEquals(car.getId(), result.getId());
+        verify(carRepository, times(1)).findById(car.getId());
     }
 
     @Test
     void testUpdate() {
-        carService.update(car.getCarId(), car);
-
-        verify(carRepository, times(1)).update(car.getCarId(), car);
+        carService.update(car.getId(), car);
+        verify(carRepository, times(1)).update(car.getId(), car);
     }
 
     @Test
     void testDeleteCarById() {
-        carService.deleteCarById(car.getCarId());
+        carService.deleteCarById(car.getId());
 
-        verify(carRepository, times(1)).delete(car.getCarId());
+        verify(carRepository, times(1)).delete(car.getId());
     }
 }
