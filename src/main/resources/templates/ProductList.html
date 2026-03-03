@@ -22,11 +22,11 @@
         <tbody>
         <tr th:each="product: ${products}">
             <td th:text="${product.productName}"></td>
-            <td th:text="${product.productId}"></td>
+            <td th:text="${product.id}"></td>
             <td th:text="${product.productQuantity}"></td>
             <td>
-            <a th:if="${product.productId != null}"
-                th:href="@{/product/edit/{id}(id=${product.productId})}"
+            <a th:if="${product.id != null}"
+                th:href="@{/product/edit/{id}(id=${product.id})}"
                 class="btn btn-sm btn-warning">
                 Edit
             </a>
@@ -34,7 +34,7 @@
             </td>
 
             <td>
-                <form th:action="@{/product/delete/{id}(id=${product.productId})}"
+                <form th:action="@{/product/delete/{id}(id=${product.id})}"
                 method="post"
                 style="display:inline;"
                 onsubmit="return confirm('Delete this product?');">

@@ -1,14 +1,12 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
-import java.util.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
 
 
 @Getter @Setter
-public class Product {
-    private UUID productId;
+public class Product extends BaseModel{
     private String productName;
     private int productQuantity;
  

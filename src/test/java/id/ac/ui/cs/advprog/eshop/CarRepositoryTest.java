@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +23,6 @@ class CarRepositoryTest {
     @Test
     void testCreateAndFindAll() {
         Car car = new Car();
-        car.setCarId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         car.setCarName("Toyota Supra");
         car.setCarColor("Red");
         car.setCarQuantity(1);
@@ -32,54 +32,49 @@ class CarRepositoryTest {
         Iterator<Car> carIterator = carRepository.findAll();
         assertTrue(carIterator.hasNext());
         Car savedCar = carIterator.next();
-        assertEquals(car.getCarId(), savedCar.getCarId());
+        assertEquals(car.getId(), savedCar.getId());
         assertEquals("Toyota Supra", savedCar.getCarName());
     }
 
     @Test
     void testCreateWithExistingId() {
         Car car = new Car();
-        car.setCarId("manual-id-123");
+        UUID existingId = UUID.randomUUID();
+        car.setId(existingId);
         car.setCarName("Honda Civic");
 
         carRepository.create(car);
 
-        assertEquals("manual-id-123", car.getCarId());
+        assertEquals(existingId, car.getId());
     }
 
     @Test
-    void testCreateWithNullIdGeneratesUuid() {
+    void testCreateAutoGeneratesUUID() {
         Car car = new Car();
-        car.setCarId(null);
-
         carRepository.create(car);
-
-        assertNotNull(car.getCarId());
-        assertFalse(car.getCarId().isEmpty());
+        assertNotNull(car.getId());
     }
 
     @Test
     void testFindByIdSuccess() {
         Car car = new Car();
-        car.setCarId("123");
         car.setCarName("Nissan GTR");
         carRepository.create(car);
 
-        Car foundCar = carRepository.findById("123");
+        Car foundCar = carRepository.findById(car.getId());
         assertNotNull(foundCar);
-        assertEquals("123", foundCar.getCarId());
+        assertEquals(car.getId(), foundCar.getId());
     }
 
     @Test
     void testFindByIdNotFound() {
-        Car foundCar = carRepository.findById("non-existent-id");
+        Car foundCar = carRepository.findById(UUID.randomUUID());
         assertNull(foundCar);
     }
 
     @Test
     void testUpdateSuccess() {
         Car car = new Car();
-        car.setCarId("123");
         car.setCarName("Old Name");
         carRepository.create(car);
 
@@ -88,7 +83,7 @@ class CarRepositoryTest {
         updatedCarData.setCarColor("Blue");
         updatedCarData.setCarQuantity(5);
 
-        Car result = carRepository.update("123", updatedCarData);
+        Car result = carRepository.update(car.getId(), updatedCarData);
 
         assertNotNull(result);
         assertEquals("New Name", car.getCarName());
@@ -99,18 +94,17 @@ class CarRepositoryTest {
     @Test
     void testUpdateNotFound() {
         Car updatedCarData = new Car();
-        Car result = carRepository.update("invalid-id", updatedCarData);
+        Car result = carRepository.update(UUID.randomUUID(), updatedCarData);
         assertNull(result);
     }
 
     @Test
     void testDelete() {
         Car car = new Car();
-        car.setCarId("123");
         carRepository.create(car);
-        carRepository.delete("123");
+        carRepository.delete(car.getId());
 
-        Car foundCar = carRepository.findById("123");
+        Car foundCar = carRepository.findById(car.getId());
         assertNull(foundCar);
     }
 }

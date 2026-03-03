@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.eshop;
 import id.ac.ui.cs.advprog.eshop.model.Car;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +14,6 @@ class CarTest {
     @BeforeEach
     void setUp() {
         this.car = new Car();
-        this.car.setCarId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         this.car.setCarName("Toyota Supra");
         this.car.setCarColor("Red");
         this.car.setCarQuantity(1);
@@ -21,7 +21,7 @@ class CarTest {
 
     @Test
     void testGetCarId() {
-        assertEquals("eb558e9f-1c39-460e-8860-71af6af63bd6", this.car.getCarId());
+        assertNotNull(this.car.getId());
     }
 
     @Test
@@ -41,9 +41,9 @@ class CarTest {
 
     @Test
     void testSetCarId() {
-        String newId = "new-uuid-123";
-        this.car.setCarId(newId);
-        assertEquals(newId, this.car.getCarId());
+        UUID newId = UUID.randomUUID();
+        this.car.setId(newId);
+        assertEquals(newId, this.car.getId());
     }
 
     @Test

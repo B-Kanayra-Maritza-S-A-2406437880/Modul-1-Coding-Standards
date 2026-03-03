@@ -8,15 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class CarRepository {
-    static int id = 0;
+public class CarRepository implements CarRepositoryInterface{
     private List<Car> carData = new ArrayList<>();
 
     public Car create(Car car) {
-        if (car.getCarId() == null) {
-            UUID uuid = UUID.randomUUID();
-            car.setCarId(uuid.toString());
-        }
         carData.add(car);
         return car;
     }
@@ -25,20 +20,18 @@ public class CarRepository {
         return carData.iterator();
     }
 
-    public Car findById(String id) {
+    public Car findById(UUID id) {
         for (Car car : carData) {
-            if (car.getCarId().equals(id)) {
+            if (car.getId().equals(id)) {
                 return car;
             }
         }
         return null;
     }
 
-    public Car update(String id, Car updatedCar) {
-        for (int i = 0; i < carData.size(); i++) {
-            Car car = carData.get(i);
-            if (car.getCarId().equals(id)) {
-                // Update the existing car with the new information
+    public Car update(UUID id, Car updatedCar) {
+        for (Car car : carData) {
+            if (car.getId().equals(id)) {
                 car.setCarName(updatedCar.getCarName());
                 car.setCarColor(updatedCar.getCarColor());
                 car.setCarQuantity(updatedCar.getCarQuantity());
@@ -48,7 +41,7 @@ public class CarRepository {
         return null; // Handle the case where the car is not found
     }
 
-    public void delete(String id) {
-        carData.removeIf(car -> car.getCarId().equals(id));
+    public void delete(UUID id) {
+        carData.removeIf(car -> car.getId().equals(id));
     }
 }

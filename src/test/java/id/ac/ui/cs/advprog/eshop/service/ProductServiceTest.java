@@ -1,7 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
+import id.ac.ui.cs.advprog.eshop.repository.ProductRepositoryInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class ProductServiceTest {
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductRepositoryInterface productRepository;
 
     @InjectMocks
     private ProductServiceImpl productService;
@@ -30,7 +30,6 @@ class ProductServiceTest {
     @BeforeEach
     void setUp() {
         product = new Product();
-        product.setProductId(UUID.randomUUID());
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
     }
@@ -57,7 +56,7 @@ class ProductServiceTest {
 
     @Test
     void testFindProductById() {
-        UUID id = product.getProductId();
+        UUID id = product.getId();
         when(productRepository.findProductById(id)).thenReturn(product);
 
         Product result = productService.findProductById(id);
@@ -69,16 +68,14 @@ class ProductServiceTest {
     @Test
     void testUpdate() {
         when(productRepository.update(product)).thenReturn(product);
-
         Product result = productService.update(product);
-
         assertNotNull(result);
         verify(productRepository, times(1)).update(product);
     }
 
     @Test
     void testDelete() {
-        UUID id = product.getProductId();
+        UUID id = product.getId();
         productService.delete(id);
         verify(productRepository, times(1)).delete(id);
     }
