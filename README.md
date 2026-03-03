@@ -63,7 +63,7 @@ By maintaining separate interfaces for CarService and ProductService, I ensured 
 By creating BaseModel class, we standardized the ID system. After I applied the SOLID principles I designed a scenario that Product and Car can simply inherit BaseModel. If we want to add another model, we don't need to write manual ID generation logic. We just extend BaseModel and it's ready.
 In contrast to the before solid code where Car used String and Product used UUID separately.
 
-= Flexibility and Swappable Logic
+- Flexibility and Swappable Logic
 After applying the SOLID principle, in CarServiceImpl, the code now depends on the interface. If we want to move from an ArrayList storage to a real database, we only need to create a new implementation of CarRepositoryInterface. We won't have to change a single line of code in the CarServiceImpl or CarController.
 
 - Safety from Side Effects (SRP & LSP):
