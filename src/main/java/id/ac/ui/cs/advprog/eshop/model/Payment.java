@@ -1,5 +1,6 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import lombok.Getter;
 import java.util.Arrays;
 import java.util.List;
@@ -12,15 +13,13 @@ public class Payment {
     private String status;
     private Map<String, String> paymentData;
 
-    private static final List<String> VALID_STATUSES =
-            Arrays.asList("PENDING", "SUCCESS", "REJECTED");
 
     public Payment(String id, String method,
                    Map<String, String> paymentData) {
         this.id = id;
         this.method = method;
         this.paymentData = paymentData;
-        this.status = "PENDING";
+        this.status = PaymentStatus.PENDING.getValue();
     }
 
     public Payment(String id, String method,
@@ -30,7 +29,7 @@ public class Payment {
     }
 
     public void setStatus(String status) {
-        if (!VALID_STATUSES.contains(status)) {
+        if (!PaymentStatus.contains(status)) {
             throw new IllegalArgumentException(
                     "Invalid payment status: " + status);
         }
