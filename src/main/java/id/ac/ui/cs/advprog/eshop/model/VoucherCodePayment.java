@@ -7,29 +7,38 @@ public class VoucherCodePayment extends Payment {
     public VoucherCodePayment(String id, String method,
                               Map<String, String> paymentData, Order order) {
         super(id, method, paymentData, order);
-        if (validateVoucher(paymentData)) {
+        if (isValidVoucher(paymentData)) {
             this.setStatus(PaymentStatus.SUCCESS.getValue());
         } else {
             this.setStatus(PaymentStatus.REJECTED.getValue());
         }
     }
 
-    private boolean validateVoucher(Map<String, String> data) {
+    private boolean isValidVoucher(Map<String, String> data) {
         String code = data.get("voucherCode");
-        if (code == null || code.isEmpty()){
-            return false;
-        }
-        if (code.length() != 16) {
-            return false;
-        }
+        return isNotEmpty(code)
+                && isSixteenChars(code)
+                && isStartWithESHOP(code)
+                && hasEightNumerics(code);
+    }
 
-        if (!code.startsWith("ESHOP")){
-            return false;
-        }
 
-        long numericCount = code.chars()
+    private boolean isNotEmpty(String code) {
+        return code != null && !code.isEmpty();
+    }
+
+    private boolean isSixteenChars(String code) {
+        return code.length() == 16;
+    }
+
+    private boolean isStartWithESHOP(String code) {
+        return code.startsWith("ESHOP");
+    }
+
+    private boolean hasEightNumerics(String code) {
+        long count = code.chars()
                 .filter(Character::isDigit)
                 .count();
-        return numericCount == 8;
+        return count == 8;
     }
 }
