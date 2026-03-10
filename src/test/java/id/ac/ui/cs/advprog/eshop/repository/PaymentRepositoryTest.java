@@ -2,7 +2,9 @@ package id.ac.ui.cs.advprog.eshop.repository;
 
 import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
+import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +23,14 @@ class PaymentRepositoryTest {
     void setUp() {
         paymentRepository = new PaymentRepository();
 
+        // Bikin order dulu
+        List<Product> products = new ArrayList<>();
+        Product product1 = new Product();
+        product1.setProductName("Sampo Cap Bambang");
+        product1.setProductQuantity(2);
+        products.add(product1);
+        Order order = new Order("o-001", products, 1708560000L, "Safira Sudrajat");
+
         Map<String, String> voucherData = new HashMap<>();
         voucherData.put("voucherCode", "ESHOP1234ABC5678");
 
@@ -30,9 +40,9 @@ class PaymentRepositoryTest {
 
         payments = new ArrayList<>();
         Payment payment1 = new Payment("p-001",
-                PaymentMethod.VOUCHER_CODE.getValue(), voucherData);
+                PaymentMethod.VOUCHER_CODE.getValue(), voucherData, order);
         Payment payment2 = new Payment("p-002",
-                PaymentMethod.BANK_TRANSFER.getValue(), bankData);
+                PaymentMethod.BANK_TRANSFER.getValue(), bankData, order);
 
         payments.add(payment1);
         payments.add(payment2);
@@ -55,6 +65,7 @@ class PaymentRepositoryTest {
 
         Payment updatedPayment = new Payment(payment.getId(),
                 payment.getMethod(), payment.getPaymentData(),
+                payment.getOrder(),
                 PaymentStatus.SUCCESS.getValue());
         Payment result = paymentRepository.save(updatedPayment);
 
