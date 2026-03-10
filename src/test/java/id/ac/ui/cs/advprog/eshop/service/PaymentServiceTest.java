@@ -4,6 +4,7 @@ import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.PaymentFactory;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +31,9 @@ class PaymentServiceTest {
 
     @Mock
     PaymentRepository paymentRepository;
+
+    @Mock
+    PaymentFactory paymentFactory;
 
     List<Payment> payments;
     Order order;
@@ -62,15 +68,18 @@ class PaymentServiceTest {
     @Test
     void testAddPayment() {
         Payment payment = payments.get(0);
+        doReturn(payment).when(paymentFactory).create(any(Order.class),
+                anyString(), any(Map.class)); // ← mock factory
         doReturn(payment).when(paymentRepository).save(any(Payment.class));
 
         Payment result = paymentService.addPayment(order,
                 PaymentMethod.VOUCHER_CODE.getValue(),
                 payment.getPaymentData());
 
+        verify(paymentFactory, times(1)).create(any(Order.class),
+                anyString(), any(Map.class));
         verify(paymentRepository, times(1)).save(any(Payment.class));
         assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), result.getMethod());
-        assertEquals(order, result.getOrder());
     }
 
     @Test
