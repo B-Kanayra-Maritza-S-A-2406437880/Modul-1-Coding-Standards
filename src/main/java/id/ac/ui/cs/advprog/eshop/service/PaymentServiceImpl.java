@@ -3,6 +3,7 @@ package id.ac.ui.cs.advprog.eshop.service;
 import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.PaymentFactory;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,13 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     PaymentRepository paymentRepository;
 
+    @Autowired
+    PaymentFactory paymentFactory;
+
     @Override
     public Payment addPayment(Order order, String method,
                               Map<String, String> paymentData) {
-        Payment payment = new Payment(UUID.randomUUID().toString(),
-                method, paymentData, order);
+        Payment payment = paymentFactory.create(order, method, paymentData);
         paymentRepository.save(payment);
         return payment;
     }
