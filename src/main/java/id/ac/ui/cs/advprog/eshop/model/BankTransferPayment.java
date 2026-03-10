@@ -15,9 +15,8 @@ public class BankTransferPayment extends Payment {
     }
 
     private boolean isValidBankTransfer(Map<String, String> data) {
-        String bankName = data.get("bankName");
-        String referenceCode = data.get("referenceCode");
-        return isNotEmpty(bankName) && isNotEmpty(referenceCode);
+        return isNotEmpty(data.get("bankName"))
+                && isNotEmpty(data.get("referenceCode"));
     }
 
     private boolean isNotEmpty(String value) {
