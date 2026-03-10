@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,49 +21,53 @@ class PaymentTest {
 
     @Test
     void testCreatePaymentDefaultStatus() {
-        Payment payment = new Payment("p-001", "VOUCHER_CODE", paymentData);
+        Payment payment = new Payment("p-001", PaymentMethod.VOUCHER_CODE.getValue(), paymentData);
 
         assertEquals("p-001", payment.getId());
-        assertEquals("VOUCHER_CODE", payment.getMethod());
-        assertEquals("PENDING", payment.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.PENDING.getValue(), payment.getStatus());
         assertEquals(paymentData, payment.getPaymentData());
     }
 
     @Test
     void testCreatePaymentWithStatus() {
-        Payment payment = new Payment("p-001", "VOUCHER_CODE", paymentData,
-                "SUCCESS");
+        Payment payment = new Payment("p-001", PaymentMethod.VOUCHER_CODE.getValue(), paymentData,
+                PaymentStatus.SUCCESS.getValue());
 
-        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
     }
 
     @Test
     void testCreatePaymentWithRejectedStatus() {
-        Payment payment = new Payment("p-001", "VOUCHER_CODE", paymentData,
-                "REJECTED");
+        Payment payment = new Payment("p-001",
+                PaymentMethod.VOUCHER_CODE.getValue(), paymentData,
+                PaymentStatus.REJECTED.getValue());
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
     void testSetStatusSuccess() {
-        Payment payment = new Payment("p-001", "VOUCHER_CODE", paymentData);
-        payment.setStatus("SUCCESS");
+        Payment payment = new Payment("p-001",
+                PaymentMethod.VOUCHER_CODE.getValue(), paymentData);
+        payment.setStatus(PaymentStatus.SUCCESS.getValue());
 
-        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
     }
 
     @Test
     void testSetStatusRejected() {
-        Payment payment = new Payment("p-001", "VOUCHER_CODE", paymentData);
-        payment.setStatus("REJECTED");
+        Payment payment = new Payment("p-001",
+                PaymentMethod.VOUCHER_CODE.getValue(), paymentData);
+        payment.setStatus(PaymentStatus.REJECTED.getValue());
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
     void testSetStatusInvalid() {
-        Payment payment = new Payment("p-001", "VOUCHER_CODE", paymentData);
+        Payment payment = new Payment("p-001",
+                PaymentMethod.VOUCHER_CODE.getValue(), paymentData);
 
         assertThrows(IllegalArgumentException.class,
                 () -> payment.setStatus("MEOW"));
@@ -70,6 +76,8 @@ class PaymentTest {
     @Test
     void testCreatePaymentInvalidStatus() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Payment("p-001", "VOUCHER_CODE", paymentData, "INVALID"));
+                () -> new Payment("p-001",
+                        PaymentMethod.VOUCHER_CODE.getValue(), paymentData,
+                        "INVALID"));
     }
 }
